@@ -229,7 +229,11 @@ def home():
                             <div class="card-body">
                                 <h6 class="card-title">{{ product.get('title', 'No Title') }}</h6>
                                 <p class="text-muted">{{ product.get('brand', 'Unknown') }}</p>
-                                <p class="fw-bold">{{ product.get('price', 'Price not available') }}</p>
+                                <p class="fw-bold">
+                                  {% if product.get('price', '').startswith('$') %}
+                                    {{ product['price'] }}
+                                  {% endif %}
+                                </p>
                                 <a href="{{ url_for('product_detail', asin=product.asin) }}" class="btn btn-primary btn-sm">View Details</a>
                             </div>
                         </div>
@@ -345,7 +349,11 @@ def product_detail(asin):
                         <p><strong>ASIN:</strong> {{ product.get('asin', 'N/A') }}</p>
                         <p><strong>Brand:</strong> {{ product.get('brand', 'N/A') }}</p>
                         <p><strong>Category:</strong> {{ product.get('category', []) | join(' > ') }}</p>
-                        <p><strong>Price:</strong> {{ product.get('price', 'Not available') }}</p>
+                        <p><strong>Price:</strong> {% if product.get('price', '').startswith('$') %}
+                                    {{ product['price'] }}
+                                  {% else %}
+                                    $
+                                  {% endif %} </p>
                         <p><strong>Date:</strong> {{ product.get('date', 'N/A') }}</p>
 
                         <h5>Features:</h5>
@@ -358,19 +366,10 @@ def product_detail(asin):
                         <h5>Description:</h5>
                         <p>{{ product.get('description', []) | join(' ') }}</p>
 
-                        <h5>Rank:</h5>
-                        <ul>
-                            {% for r in product.get('rank', []) %}
-                                <li>{{ r }}</li>
-                            {% endfor %}
-                        </ul>
-
-                        <h5>Technical Details:</h5>
-                        <pre>{{ product.get('tech1', 'N/A') }}</pre>
 
                         <h5>Other Details:</h5>
                         <ul>
-                        {% for key, value in product.items() if key not in ['title','brand','asin','category','price','date','feature','description','rank','tech1','imageURLHighRes'] %}
+                        {% for key, value in product.items() if key in ['also_buy','also_view','similar_item'] %}
                             <li><strong>{{ key }}:</strong> {{ value }}</li>
                         {% endfor %}
                         </ul>
