@@ -369,7 +369,7 @@ def product_detail(asin):
 
                         <h5>Other Details:</h5>
                         <ul>
-                        {% for key, value in product.items() if key in ['also_buy','also_view','similar_item'] %}
+                        {% for key, value in product.items() if key in ['also_buy','also_view'] %}
                             <li><strong>{{ key }}:</strong> {{ value }}</li>
                         {% endfor %}
                         </ul>
